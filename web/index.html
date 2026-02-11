@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Housing Price Prediction System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f4ff;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .result h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .metric:last-child {
+            border-bottom: none;
+        }
+        
+        .metric-label {
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .metric-value {
+            color: #667eea;
+            font-weight: 600;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .status.trained {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status.not-trained {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #667eea;
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏠 Housing Price Prediction</h1>
+            <p>Machine Learning-Based Real Estate Valuation System</p>
+            <div style="margin-top: 15px;">
+                <span id="modelStatus" class="status not-trained">Model Not Trained</span>
+            </div>
+        </div>
+        
+        <div class="cards">
+            <!-- Training Card -->
+            <div class="card">
+                <h2>📊 Train Model</h2>
+                <div class="form-group">
+                    <label>Training Data Source:</label>
+                    <select id="dataSource">
+                        <option value="sample">Use Sample Data</option>
+                        <option value="file">Upload CSV File</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" id="fileUploadGroup" style="display: none;">
+                    <label>CSV File Path:</label>
+                    <input type="text" id="csvFilePath" placeholder="e.g., data/housing.csv">
+                </div>
+                
+                <div class="form-group" id="sampleSizeGroup">
+                    <label>Number of Samples:</label>
+                    <input type="number" id="numSamples" value="1000" min="100" max="10000">
+                </div>
+                
+                <button class="btn" onclick="trainModel()">Train Model</button>
+                
+                <div id="trainResult"></div>
+            </div>
+            
+            <!-- Prediction Card -->
+            <div class="card">
+                <h2>🔮 Predict Price</h2>
+                
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Area (sq ft):</label>
+                        <input type="number" id="area" value="1500" min="100">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Bedrooms:</label>
+                        <input type="number" id="bedrooms" value="3" min="0">
+                    </div>
+                </div>
+                
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Bathrooms:</label>
+                        <input type="number" id="bathrooms" value="2" min="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Parking Spaces:</label>
+                        <input type="number" id="parking" value="1" min="0">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Location:</label>
+                    <select id="location">
+                        <option value="Downtown">Downtown</option>
+                        <option value="Suburb">Suburb</option>
+                        <option value="Rural">Rural</option>
+                        <option value="Uptown">Uptown</option>
+                        <option value="Beachside">Beachside</option>
+                    </select>
+                </div>
+                
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Age (years):</label>
+                        <input type="number" id="age" value="5" min="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Furnishing:</label>
+                        <select id="furnishing">
+                            <option value="Furnished">Furnished</option>
+                            <option value="Semi-Furnished">Semi-Furnished</option>
+                            <option value="Unfurnished">Unfurnished</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button class="btn btn-secondary" onclick="predictPrice()">Predict Price</button>
+                
+                <div id="predictResult"></div>
+            </div>
+            
+            <!-- Evaluation Card -->
+            <div class="card">
+                <h2>📈 Model Performance</h2>
+                <p style="color: #666; margin-bottom: 15px;">
+                    View detailed metrics of the trained model's performance.
+                </p>
+                
+                <button class="btn" onclick="evaluateModel()">Get Metrics</button>
+                
+                <div id="evalResult"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const API_BASE = 'http://localhost:8080';
+        
+        // Check model status on load
+        window.onload = () => {
+            checkStatus();
+        };
+        
+        // Toggle file upload field
+        document.getElementById('dataSource').addEventListener('change', (e) => {
+            const fileGroup = document.getElementById('fileUploadGroup');
+            const sampleGroup = document.getElementById('sampleSizeGroup');
+            
+            if (e.target.value === 'file') {
+                fileGroup.style.display = 'block';
+                sampleGroup.style.display = 'none';
+            } else {
+                fileGroup.style.display = 'none';
+                sampleGroup.style.display = 'block';
+            }
+        });
+        
+        async function checkStatus() {
+            try {
+                const response = await fetch(`${API_BASE}/status`);
+                const data = await response.json();
+                
+                const statusEl = document.getElementById('modelStatus');
+                if (data.modelTrained) {
+                    statusEl.textContent = '✓ Model Trained';
+                    statusEl.className = 'status trained';
+                } else {
+                    statusEl.textContent = '✗ Model Not Trained';
+                    statusEl.className = 'status not-trained';
+                }
+            } catch (error) {
+                console.error('Error checking status:', error);
+            }
+        }
+        
+        async function trainModel() {
+            const resultDiv = document.getElementById('trainResult');
+            resultDiv.innerHTML = '<div class="loading">Training model... Please wait.</div>';
+            
+            try {
+                const dataSource = document.getElementById('dataSource').value;
+                const requestBody = {};
+                
+                if (dataSource === 'sample') {
+                    requestBody.useSample = true;
+                    requestBody.numSamples = parseInt(document.getElementById('numSamples').value);
+                } else {
+                    requestBody.filepath = document.getElementById('csvFilePath').value;
+                }
+                
+                const response = await fetch(`${API_BASE}/train`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(requestBody)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <h3>✓ Training Successful!</h3>
+                        </div>
+                        <div class="result">
+                            <div class="metric">
+                                <span class="metric-label">Training Samples:</span>
+                                <span class="metric-value">${data.trainSize}</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Test Samples:</span>
+                                <span class="metric-value">${data.testSize}</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">R² Score:</span>
+                                <span class="metric-value">${data.metrics.r2.toFixed(4)}</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">RMSE:</span>
+                                <span class="metric-value">$${data.metrics.rmse.toFixed(2)}</span>
+                            </div>
+                        </div>
+                    `;
+                    checkStatus();
+                } else {
+                    resultDiv.innerHTML = `<div class="error">Error: ${data.error}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+        
+        async function predictPrice() {
+            const resultDiv = document.getElementById('predictResult');
+            resultDiv.innerHTML = '<div class="loading">Predicting price...</div>';
+            
+            try {
+                const requestBody = {
+                    area: parseFloat(document.getElementById('area').value),
+                    bedrooms: parseInt(document.getElementById('bedrooms').value),
+                    bathrooms: parseInt(document.getElementById('bathrooms').value),
+                    location: document.getElementById('location').value,
+                    age: parseInt(document.getElementById('age').value),
+                    furnishing: document.getElementById('furnishing').value,
+                    parking: parseInt(document.getElementById('parking').value)
+                };
+                
+                const response = await fetch(`${API_BASE}/predict`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(requestBody)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <div class="result">
+                            <h3>Predicted Price</h3>
+                            <div style="font-size: 2em; color: #667eea; font-weight: bold; text-align: center; margin: 15px 0;">
+                                $${data.predictedPrice.toLocaleString()}
+                            </div>
+                            <p style="font-size: 0.9em; color: #666;">
+                                Based on the provided features, the estimated market value of this property is shown above.
+                            </p>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<div class="error">Error: ${data.error}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+        
+        async function evaluateModel() {
+            const resultDiv = document.getElementById('evalResult');
+            resultDiv.innerHTML = '<div class="loading">Evaluating model...</div>';
+            
+            try {
+                const response = await fetch(`${API_BASE}/evaluate`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <div class="result">
+                            <h3>Performance Metrics</h3>
+                            <div class="metric">
+                                <span class="metric-label">Test Samples:</span>
+                                <span class="metric-value">${data.testSize}</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">R² Score:</span>
+                                <span class="metric-value">${data.metrics.r2.toFixed(4)}</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">RMSE:</span>
+                                <span class="metric-value">$${data.metrics.rmse.toFixed(2)}</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">MAE:</span>
+                                <span class="metric-value">$${data.metrics.mae.toFixed(2)}</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">MSE:</span>
+                                <span class="metric-value">${data.metrics.mse.toFixed(2)}</span>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<div class="error">Error: ${data.error}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+    </script>
+</body>
+</html>
