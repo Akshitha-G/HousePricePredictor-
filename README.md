@@ -66,7 +66,7 @@ HousingPricePredictor/
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/YourUsername/HousePricePredictor-demo.git
+git clone https://github.com/Akshitha-G/HousePricePredictor-demo.git
 cd HousePricePredictor-demo
 ```
 
@@ -138,7 +138,7 @@ Input:
 - Furnishing: Furnished
 - Kitchen: Open Kitchen
 
-Output:
+Sample Output:
 💰 Predicted Price: ~$1,050,000
 ```
 
@@ -155,7 +155,7 @@ Input:
 - Furnishing: Unfurnished
 - Kitchen: Closed Kitchen
 
-Output:
+Sample Output:
 💰 Predicted Price: ~$220,000
 ```
 
@@ -172,7 +172,7 @@ Input:
 - Furnishing: Semi-Furnished
 - Kitchen: Open Kitchen
 
-Output:
+Sample Output:
 💰 Predicted Price: ~$585,000
 ```
 
@@ -311,9 +311,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Akshitha G.**
 
-- GitHub: [@YourGitHubUsername](https://github.com/YourGitHubUsername)
-- LinkedIn: [Your LinkedIn](https://linkedin.com/in/yourprofile)
-- Email: akshitha@example.com
+- GitHub: [@YourGitHubUsername](https://github.com/Akshitha-G)
+- LinkedIn: [Your LinkedIn](https://linkedin.com/in/akshitha-golconda2006)
+- Email: gakshitha046@gmail.com
 
 ## 🙏 Acknowledgments
 
@@ -332,9 +332,9 @@ Special thanks to:
 
 For questions, issues, or feedback:
 
-- **Open an Issue**: [GitHub Issues](https://github.com/YourUsername/HousePricePredictor-demo/issues)
-- **Email**: akshitha@example.com
-- **Discussion**: [GitHub Discussions](https://github.com/YourUsername/HousePricePredictor-demo/discussions)
+- **Open an Issue**: [GitHub Issues](https://github.com/Akshitha-G/HousePricePredictor-demo/issues)
+- **Email**: gakshitha046@gmail.com
+- **Discussion**: [GitHub Discussions](https://github.com/Akshitha-G/HousePricePredictor-demo/discussions)
 
 ## 🌟 Show Your Support
 
@@ -347,9 +347,9 @@ If you found this project helpful or interesting:
 
 ## 📊 Project Stats
 
-![GitHub stars](https://img.shields.io/github/stars/YourUsername/HousePricePredictor-demo?style=social)
-![GitHub forks](https://img.shields.io/github/forks/YourUsername/HousePricePredictor-demo?style=social)
-![GitHub watchers](https://img.shields.io/github/watchers/YourUsername/HousePricePredictor-demo?style=social)
+![GitHub stars](https://img.shields.io/github/stars/Akshitha-G/HousePricePredictor-demo?style=social)
+![GitHub forks](https://img.shields.io/github/forks/Akshitha-G/HousePricePredictor-demo?style=social)
+![GitHub watchers](https://img.shields.io/github/watchers/Akshitha-G/HousePricePredictor-demo?style=social)
 
 ---
 
@@ -357,6 +357,6 @@ If you found this project helpful or interesting:
 
 **Made with ❤️ and ☕ using Java**
 
-[Report Bug](https://github.com/YourUsername/HousePricePredictor-demo/issues) · [Request Feature](https://github.com/YourUsername/HousePricePredictor-demo/issues) · [Documentation](https://github.com/YourUsername/HousePricePredictor-demo/wiki)
+[Report Bug](https://github.com/Akshitha-G/HousePricePredictor-demo/issues) · [Request Feature](https://github.com/Akshitha-G/HousePricePredictor-demo/issues) · [Documentation](https://github.com/Akshitha-G/HousePricePredictor-demo/wiki)
 
 </div>
